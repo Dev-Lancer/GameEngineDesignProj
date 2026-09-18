@@ -1,89 +1,143 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IDamageable
 {
     [SerializeField] private Rigidbody2D rBody;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    public float speed = 7.0f, jumpPow = 16.0f;
+
+    [Header("Movement")]
+    public float speed = 7.0f;
+    public float acceleration = 50.0f;
+    public float deceleration = 60.0f;
+
+    [Header("Jump")]
+    public float jumpPow = 10.0f;
+
+    [Header("Fast Fall")]
+    public float fallSpeed = 20.0f;
+
     private float hori;
+
     private bool isFaceRight = true;
     private bool jumpRequested = false;
     private bool jumpCutRequested = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-
+        rBody = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // left and right
-        hori = Input.GetAxisRaw("Horizontal");
+        // Left and right
+        hori = 0.0f;
 
-        // up
-        // read input here, apply physics in FixedUpdate
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
+        {
+            hori = -1.0f;
+        }
+
+        if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
+        {
+            hori = 1.0f;
+        }
+
+        // Check if player is on the ground
+
+
+        // Jump
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             jumpRequested = true;
         }
 
-        // short hop when releasing space
-        if (Input.GetKeyUp(KeyCode.Space) && rBody.linearVelocity.y > 0.0f)
+        // Short hop when releasing Space
+        if (Keyboard.current.spaceKey.wasReleasedThisFrame &&
+            rBody.linearVelocity.y > 0.0f)
         {
             jumpCutRequested = true;
         }
 
+        // Fast fall
+        if (Keyboard.current.sKey.isPressed && !IsGrounded())
+        {
+            rBody.linearVelocity = new Vector2(
+                rBody.linearVelocity.x,
+                -fallSpeed
+            );
+        }
+
         Flip();
     }
-
+    public void TakeDamage()
+    {
+        Die();
+    }
     private void FixedUpdate()
     {
-        // horizontal movement
-        rBody.linearVelocity = new Vector2(hori * speed, rBody.linearVelocity.y);
+        Move();
 
-        // apply jump request from Update
-        if (jumpRequested)
+        // Apply jump request
+        if (jumpRequested && IsGrounded())
         {
-            rBody.linearVelocity = new Vector2(rBody.linearVelocity.x, jumpPow);
+            rBody.linearVelocity = new Vector2(
+                rBody.linearVelocity.x,
+                jumpPow
+            );
+
             jumpRequested = false;
         }
 
-        // apply jump cut (short hop)
+        // Apply jump cut
         if (jumpCutRequested)
         {
             if (rBody.linearVelocity.y > 0.0f)
-                rBody.linearVelocity = new Vector2(rBody.linearVelocity.x, rBody.linearVelocity.y * 0.5f);
+            {
+                rBody.linearVelocity = new Vector2(
+                    rBody.linearVelocity.x,
+                    rBody.linearVelocity.y * 0.5f
+                );
+            }
+
             jumpCutRequested = false;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Move()
     {
-        if (collision.CompareTag("breadcrumb") || collision.CompareTag("Sandwich"))
+        float targetSpeed = hori * speed;
+
+        float speedDifference = targetSpeed - rBody.linearVelocity.x;
+
+        float rate;
+
+        if (Mathf.Abs(hori) > 0.01f)
         {
-            Destroy(collision.gameObject);
+            rate = acceleration;
+        }
+        else
+        {
+            rate = deceleration;
         }
 
-        if(collision.CompareTag("Enemy") || (collision.CompareTag("Void")))
-        {
-            // Handle player death or respawn logic here
-            Debug.Log("Player has died!");
-        }
+        float movement = speedDifference * rate;
+
+        rBody.AddForce(Vector2.right * movement);
     }
 
     private void Flip()
     {
-        if (isFaceRight && hori < 0.0f || !isFaceRight && hori > 0.0f)
+        if (isFaceRight && hori < 0.0f ||
+            !isFaceRight && hori > 0.0f)
         {
             isFaceRight = !isFaceRight;
 
-            // flip by turning the scale negative
             Vector3 localScale = transform.localScale;
             localScale.x *= -1;
 
@@ -91,8 +145,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void Die()
+    {
+        Debug.Log("Player Died!!!");
+    }
+
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        return Physics2D.OverlapCircle(
+            groundCheck.position,
+            0.2f,
+            groundLayer
+        );
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
     }
 }
