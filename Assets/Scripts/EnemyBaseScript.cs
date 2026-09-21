@@ -12,25 +12,12 @@ public class EnemyBaseScript : MonoBehaviour
     private int direction = 1;
     private void Start()
     {
-        if (waypoints == null || waypoints.Length == 0)
-        {
-            Debug.LogWarning($"{name}: No waypoints assigned. Enemy will not move.");
-            enabled = false;
-            return;
-        }
-        currentIndex = Mathf.Clamp(currentIndex, 0, waypoints.Length - 1);
+        
     }
 
     private void Update()
     {
-        if (waypoints == null || waypoints.Length == 0) return;
-        var wp = waypoints[currentIndex];
-        if (wp == null) return;
-
-        transform.position = Vector2.MoveTowards(transform.position, wp.position, speed * Time.deltaTime);
-
-        if (Vector2.Distance(transform.position, wp.position) <= reachThreshold)
-            AdvanceIndex();
+        
     }
     protected void AdvanceIndex()
     {
