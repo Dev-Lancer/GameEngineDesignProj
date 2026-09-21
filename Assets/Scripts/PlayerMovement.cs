@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     private bool isFaceRight = true;
     private bool jumpRequested = false;
     private bool jumpCutRequested = false;
+    private int healthPoint = 0, maxHealthPoint = 3;
 
     void Start()
     {
@@ -75,9 +76,16 @@ public class PlayerMovement : MonoBehaviour, IDamageable
 
         Flip();
     }
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
+        healthPoint -= damage;
+        if(healthPoint < 0)
         Die();
+    }
+
+    public int checkHealthPoint()
+    {
+       return healthPoint;
     }
     private void FixedUpdate()
     {

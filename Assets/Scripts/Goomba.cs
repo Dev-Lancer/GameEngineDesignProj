@@ -1,16 +1,14 @@
-using System.Reflection;
 using UnityEngine;
 
-
-
-public class EnemyBaseScript : MonoBehaviour
+public class Goomba : EnemyBaseScript
 {
     [SerializeField] private Transform[] waypoints;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float reachThreshold = 0.05f;
     private int currentIndex = 0;
     private int direction = 1;
-    private void Start()
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
         if (waypoints == null || waypoints.Length == 0)
         {
@@ -21,7 +19,8 @@ public class EnemyBaseScript : MonoBehaviour
         currentIndex = Mathf.Clamp(currentIndex, 0, waypoints.Length - 1);
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
         if (waypoints == null || waypoints.Length == 0) return;
         var wp = waypoints[currentIndex];
@@ -32,23 +31,6 @@ public class EnemyBaseScript : MonoBehaviour
         if (Vector2.Distance(transform.position, wp.position) <= reachThreshold)
             AdvanceIndex();
     }
-    protected void AdvanceIndex()
-    {
-        if (waypoints.Length == 1) return;
-
-        currentIndex += direction;
-        if (currentIndex >= waypoints.Length)
-        {
-            currentIndex = waypoints.Length - 2;
-            direction = -1;
-        }
-        else if (currentIndex < 0)
-        {
-            currentIndex = 1;
-            direction = 1;
-        }
-    }
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -60,11 +42,4 @@ public class EnemyBaseScript : MonoBehaviour
             }
         }
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        
-    }
-
-    
 }
