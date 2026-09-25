@@ -28,9 +28,13 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     private bool jumpRequested = false;
     private bool jumpCutRequested = false;
     private int healthPoint = 0, maxHealthPoint = 3;
+    public bool jumpCheck;
+    public GameManager manager;
 
     void Start()
     {
+        manager = FindAnyObjectByType<GameManager>();
+        manager.StartGame();
         rBody = GetComponent<Rigidbody2D>();
     }
 
@@ -73,6 +77,8 @@ public class PlayerMovement : MonoBehaviour, IDamageable
                 -fallSpeed
             );
         }
+
+        jumpCheck = IsGrounded();
 
         Flip();
     }
@@ -156,15 +162,12 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     public void Die()
     {
         Debug.Log("Player Died!!!");
+        manager.EndGame();
     }
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(
-            groundCheck.position,
-            0.2f,
-            groundLayer
-        );
+        return Physics2D.OverlapCircle(groundCheck.position,0.5f,groundLayer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
