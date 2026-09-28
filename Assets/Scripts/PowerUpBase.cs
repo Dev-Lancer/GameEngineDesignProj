@@ -1,10 +1,15 @@
 using UnityEngine;
 
-public abstract class EnemySpawner : MonoBehaviour
+public class PowerUpBase : MonoBehaviour
 {
+    public void speedBoost()
+    {
 
-    public abstract EnemyBaseScript SpawnEnemy();
-   
+    }
+
+    public void jumpBoost() 
+    {
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,5 +20,10 @@ public abstract class EnemySpawner : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+     
     }
 }

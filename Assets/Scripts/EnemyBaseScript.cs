@@ -8,7 +8,7 @@ public class EnemyBaseScript : MonoBehaviour
     [SerializeField] private Transform[] waypoints;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float reachThreshold = 0.05f;
-    private int currentIndex = 0;
+    private int currentIndex = 0;   
     private int direction = 1;
     private void Start()
     {

@@ -4,6 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public EnemySpawner spawner;
+    public PowerUpSpawner powerUpSpawner;
     public bool gameStart;
     public bool gameStop;
 
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         EnemyBaseScript enemy = spawner.SpawnEnemy();
+       // PowerUpBaseScript powerUp = powerUpSpawner.SpawnPowerUp();
     }
 
     // Update is called once per frame

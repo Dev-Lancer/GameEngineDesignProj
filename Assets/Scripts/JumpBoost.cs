@@ -1,10 +1,7 @@
 using UnityEngine;
 
-public abstract class EnemySpawner : MonoBehaviour
+public class JumpBoost : MonoBehaviour
 {
-
-    public abstract EnemyBaseScript SpawnEnemy();
-   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
