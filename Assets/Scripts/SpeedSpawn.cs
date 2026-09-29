@@ -1,8 +1,20 @@
 using UnityEngine;
 
-public class SpeedSpawn : MonoBehaviour
+public class SpeedSpawn : PowerUpSpawner
 {
+    public GameObject SpeedPrefab;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        
+    }
+    public override PowerUpBase SpawnPowerUp(Transform spawn)
+    {
+        GameObject speedBoost = Instantiate(SpeedPrefab, spawn.transform.position, Quaternion.identity);
+        return speedBoost.GetComponent<PowerUpBase>();
+
+    }
     void Start()
     {
         

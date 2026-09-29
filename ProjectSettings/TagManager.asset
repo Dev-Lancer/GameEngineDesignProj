@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - GameManager
+  - Void
+  - RespawnPoint
+  - JumpSpawn
+  - SpeedSpawn
+  - Enemy
   layers:
   - Default
   - TransparentFX

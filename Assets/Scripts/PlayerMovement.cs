@@ -27,15 +27,17 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     private bool isFaceRight = true;
     private bool jumpRequested = false;
     private bool jumpCutRequested = false;
-    private int healthPoint = 0, maxHealthPoint = 3;
+    private int healthPoint = 0;
     public bool jumpCheck;
     public GameManager manager;
+    public GameObject respawnPoint;
 
     void Start()
     {
         manager = FindAnyObjectByType<GameManager>();
         manager.StartGame();
         rBody = GetComponent<Rigidbody2D>();
+        respawnPoint = GameObject.FindGameObjectWithTag("RespawnPoint");
     }
 
     void Update()
@@ -85,7 +87,7 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         healthPoint -= damage;
-        if(healthPoint < 0)
+        if(healthPoint <= 0)
         Die();
     }
 
@@ -162,7 +164,9 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     public void Die()
     {
         Debug.Log("Player Died!!!");
-        manager.EndGame();
+        this.transform.position = respawnPoint.transform.position;
+        healthPoint = 1;
+        //manager.EndGame();
     }
 
     private bool IsGrounded()
@@ -173,5 +177,13 @@ public class PlayerMovement : MonoBehaviour, IDamageable
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Void")
+        {
+            Die();
+        }
     }
 }

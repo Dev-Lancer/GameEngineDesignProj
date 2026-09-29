@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class PowerUpBase : MonoBehaviour
 {
     
-    [SerializeField] protected float jumpIncrease = 1f;
+
     public abstract void ApplyPowerUp(PlayerMovement player);
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

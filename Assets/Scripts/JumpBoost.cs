@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class JumpBoost : PowerUpBase
 {
+    [SerializeField] protected float jumpIncrease = 1f;
     public override void ApplyPowerUp(PlayerMovement player)
     {
         player.jumpPow += jumpIncrease;
