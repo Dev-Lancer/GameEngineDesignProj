@@ -34,5 +34,7 @@ Why is this pattern a good choice for the associated functionality?
 The factory pattern is super useful for powerup system because you dont have to create a bunch of script that only serve as power ups.
 Instead of having the GameManager directly instantiate every type of power-up, it can request a power-up from the factory, it will make the system easier to expand if you want to add more type of power ups to debuff power up.
 
+build file drive: https://drive.google.com/drive/folders/1lbLhpNByZigigguvZn4G13Ddm9wZTjBs?usp=sharing 
+
 
 
