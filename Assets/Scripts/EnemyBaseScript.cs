@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class EnemyBaseScript : MonoBehaviour
 {
-    [SerializeField] private Transform[] waypoints;
-    [SerializeField] private float speed = 2f;
-    [SerializeField] private float reachThreshold = 0.05f;
-    private int currentIndex = 0;   
-    private int direction = 1;
-    private void Start()
+    [SerializeField] protected Transform[] waypoints;
+    [SerializeField] protected float speed = 2f;
+    [SerializeField] protected float reachThreshold = 0.05f;
+    protected int currentIndex = 0;
+    protected int direction = 1;
+    protected void Start()
     {
         
     }
 
-    private void Update()
+    protected void Update()
     {
-        
+       
     }
     protected void AdvanceIndex()
     {
@@ -35,9 +35,39 @@ public class EnemyBaseScript : MonoBehaviour
             direction = 1;
         }
     }
+     public void Move()
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
 
+        Transform wp = waypoints[currentIndex];
 
-    private void OnCollisionEnter2D(Collision2D collision)
+        if (wp == null) return;
+
+        transform.position = Vector2.MoveTowards(
+            transform.position,
+            wp.position,
+            speed * Time.deltaTime
+        );
+
+        if (Vector2.Distance(transform.position, wp.position) <= reachThreshold)
+        {
+            AdvanceIndex();
+        }
+    }
+
+    public void CheckBeforeMove()
+    {
+        if (waypoints == null || waypoints.Length == 0)
+        {
+
+            enabled = false;
+            return;
+        }
+
+        currentIndex = Mathf.Clamp(currentIndex, 0, waypoints.Length - 1);
+    }
+
+    protected void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -48,7 +78,7 @@ public class EnemyBaseScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected void OnTriggerEnter2D(Collider2D other)
     {
         
     }

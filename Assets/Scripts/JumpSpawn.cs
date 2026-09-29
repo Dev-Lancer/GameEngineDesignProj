@@ -1,12 +1,7 @@
 using UnityEngine;
 
-public class SpeedBoost : PowerUpBase
+public class JumpSpawn : MonoBehaviour
 {
-    [SerializeField] protected float speedIncrease = 1.5f;
-    public override void ApplyPowerUp(PlayerMovement player)
-    {
-        player.speed += speedIncrease;
-    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
